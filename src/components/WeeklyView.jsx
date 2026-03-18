@@ -1,18 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { AREAS } from '../areas';
-import { getDay, getWeekDates, getMonday, toDateStr } from '../storage';
+import { getDay, setArea, getWeekDates, getMonday, toDateStr } from '../storage';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export default function WeeklyView() {
+export default function WeeklyView({ rev, onUpdate }) {
   const [weekStart, setWeekStart] = useState(() => getMonday(new Date()));
-  const [weekData, setWeekData] = useState([]);
   const dates = getWeekDates(weekStart);
   const today = toDateStr(new Date());
 
-  useEffect(() => {
-    setWeekData(dates.map(d => getDay(d)));
-  }, [weekStart, today]);
+  const weekData = useMemo(() => dates.map(d => getDay(d)), [weekStart, rev]);
 
   function prevWeek() {
     setWeekStart(d => { const n = new Date(d); n.setDate(n.getDate() - 7); return n; });
@@ -71,6 +68,10 @@ export default function WeeklyView() {
                       className={`heatmap-cell ${done ? 'heatmap-cell--done' : ''}`}
                       style={done ? { backgroundColor: area.color + '55', borderColor: area.color } : {}}
                       title={note ? `${area.label} – ${dateStr}: ${note}` : `${area.label} – ${dateStr}`}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => { setArea(dateStr, area.id, { done: !done }); onUpdate?.(); }}
+                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { setArea(dateStr, area.id, { done: !done }); onUpdate?.(); } }}
                     >
                       {done && <span className="cell-check">✓</span>}
                     </div>

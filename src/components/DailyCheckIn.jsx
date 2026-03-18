@@ -3,18 +3,19 @@ import { AREAS } from '../areas';
 import { getDay, setArea, toDateStr } from '../storage';
 import CheckInCard from './CheckInCard';
 
-export default function DailyCheckIn() {
+export default function DailyCheckIn({ rev, onUpdate }) {
   const today = toDateStr(new Date());
   const [dayData, setDayData] = useState({});
 
   useEffect(() => {
     setDayData(getDay(today));
-  }, [today]);
+  }, [today, rev]);
 
   const handleChange = useCallback((areaId, data) => {
     setArea(today, areaId, data);
     setDayData(getDay(today));
-  }, [today]);
+    onUpdate?.();
+  }, [today, onUpdate]);
 
   const doneCount = AREAS.filter(a => dayData[a.id]?.done).length;
 
