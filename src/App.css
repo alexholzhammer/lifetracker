@@ -117,14 +117,14 @@
   border: 2px solid var(--border);
   color: var(--border);
   background: transparent;
-  font-size: 18px;
-  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   transition: all 0.15s;
   cursor: pointer;
+  position: relative;
+  overflow: visible;
 }
 
 .check-btn--on {
@@ -135,6 +135,33 @@
 
 .check-btn:hover {
   opacity: 0.75;
+}
+
+/* Confetti */
+.confetti-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.confetti-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  animation: confetti-fly 0.55s ease-out forwards;
+}
+
+@keyframes confetti-fly {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+    opacity: 0;
+  }
 }
 
 /* Note */
@@ -282,7 +309,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+}
+
+.heatmap-cell:hover {
+  opacity: 0.75;
 }
 
 .heatmap-cell--done {
@@ -290,9 +324,17 @@
 }
 
 .cell-check {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--border);
+  opacity: 0.3;
+  transition: color 0.15s, opacity 0.15s;
+}
+
+.cell-check--on {
   color: inherit;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* Score column */
