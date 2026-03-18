@@ -4,7 +4,7 @@ import { getDay, getWeekDates, getMonday, toDateStr } from '../storage';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export default function WeeklyView() {
+export default function WeeklyView({ rev }) {
   const [weekStart, setWeekStart] = useState(() => getMonday(new Date()));
   const [weekData, setWeekData] = useState([]);
   const dates = getWeekDates(weekStart);
@@ -12,7 +12,7 @@ export default function WeeklyView() {
 
   useEffect(() => {
     setWeekData(dates.map(d => getDay(d)));
-  }, [weekStart, today]);
+  }, [weekStart, today, rev]);
 
   function prevWeek() {
     setWeekStart(d => { const n = new Date(d); n.setDate(n.getDate() - 7); return n; });
