@@ -12,8 +12,8 @@ export default function App() {
         <p className="app-subtitle">Track what matters, every day.</p>
       </header>
       <main className="app-main">
-        <DailyCheckIn onUpdate={() => setRev(r => r + 1)} />
-        <WeeklyView rev={rev} />
+        <DailyCheckIn rev={rev} onUpdate={() => setRev(r => r + 1)} />
+        <WeeklyView rev={rev} onUpdate={() => setRev(r => r + 1)} />
       </main>
     </div>
   );
