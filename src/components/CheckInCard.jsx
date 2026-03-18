@@ -1,11 +1,20 @@
 import { useState } from 'react';
+import Confetti from './Confetti';
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 export default function CheckInCard({ area, entry, onChange }) {
   const [expanded, setExpanded] = useState(false);
+  const [burst, setBurst] = useState(0);
   const done = entry?.done ?? false;
   const note = entry?.note ?? '';
 
   function toggle() {
+    if (!done) setBurst(b => b + 1);
     onChange({ done: !done, note });
   }
 
@@ -25,7 +34,8 @@ export default function CheckInCard({ area, entry, onChange }) {
           onClick={toggle}
           aria-label={done ? 'Mark incomplete' : 'Mark complete'}
         >
-          ✓
+          <CheckIcon />
+          {burst > 0 && <Confetti key={burst} />}
         </button>
       </div>
 
@@ -49,3 +59,4 @@ export default function CheckInCard({ area, entry, onChange }) {
     </div>
   );
 }
+

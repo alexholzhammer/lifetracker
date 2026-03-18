@@ -1,11 +1,19 @@
 import { useState, useMemo } from 'react';
 import { AREAS } from '../areas';
 import { getDay, setArea, getWeekDates, getMonday, toDateStr } from '../storage';
+import Confetti from './Confetti';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+const CheckIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 export default function WeeklyView({ rev, onUpdate }) {
   const [weekStart, setWeekStart] = useState(() => getMonday(new Date()));
+  const [burstCells, setBurstCells] = useState({});
   const dates = getWeekDates(weekStart);
   const today = toDateStr(new Date());
 
@@ -16,6 +24,15 @@ export default function WeeklyView({ rev, onUpdate }) {
   }
   function nextWeek() {
     setWeekStart(d => { const n = new Date(d); n.setDate(n.getDate() + 7); return n; });
+  }
+
+  function handleCellClick(dateStr, areaId, done) {
+    setArea(dateStr, areaId, { done: !done });
+    onUpdate?.();
+    if (!done) {
+      const key = `${dateStr}:${areaId}`;
+      setBurstCells(prev => ({ ...prev, [key]: (prev[key] ?? 0) + 1 }));
+    }
   }
 
   const isCurrentWeek = toDateStr(weekStart) === toDateStr(getMonday(new Date()));
@@ -62,6 +79,8 @@ export default function WeeklyView({ rev, onUpdate }) {
                 {AREAS.map(area => {
                   const done = dayEntry[area.id]?.done;
                   const note = dayEntry[area.id]?.note;
+                  const burstKey = `${dateStr}:${area.id}`;
+                  const burstCount = burstCells[burstKey] ?? 0;
                   return (
                     <div
                       key={area.id}
@@ -70,10 +89,13 @@ export default function WeeklyView({ rev, onUpdate }) {
                       title={note ? `${area.label} – ${dateStr}: ${note}` : `${area.label} – ${dateStr}`}
                       role="button"
                       tabIndex={0}
-                      onClick={() => { setArea(dateStr, area.id, { done: !done }); onUpdate?.(); }}
-                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { setArea(dateStr, area.id, { done: !done }); onUpdate?.(); } }}
+                      onClick={() => handleCellClick(dateStr, area.id, done)}
+                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleCellClick(dateStr, area.id, done); }}
                     >
-                      {done && <span className="cell-check">✓</span>}
+                      <span className={`cell-check ${done ? 'cell-check--on' : ''}`}>
+                        <CheckIcon />
+                      </span>
+                      {burstCount > 0 && <Confetti key={burstCount + burstKey} />}
                     </div>
                   );
                 })}
