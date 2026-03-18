@@ -21,11 +21,11 @@ export default function CheckInCard({ area, entry, onChange }) {
           <span className="area-label">{area.label}</span>
         </div>
         <button
-          className={`toggle ${done ? 'toggle--on' : ''}`}
+          className={`check-btn ${done ? 'check-btn--on' : ''}`}
           onClick={toggle}
           aria-label={done ? 'Mark incomplete' : 'Mark complete'}
         >
-          {done ? 'Done' : 'Skip'}
+          ✓
         </button>
       </div>
 

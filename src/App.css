@@ -109,26 +109,31 @@
   color: var(--text);
 }
 
-/* Toggle button */
-.toggle {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1.5px solid var(--border);
-  color: var(--text-muted);
+/* Check button */
+.check-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  color: var(--border);
   background: transparent;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   transition: all 0.15s;
-  white-space: nowrap;
+  cursor: pointer;
 }
 
-.toggle--on {
+.check-btn--on {
   border-color: var(--area-color);
-  color: var(--area-color);
-  background: color-mix(in srgb, var(--area-color) 10%, transparent);
+  color: white;
+  background: var(--area-color);
 }
 
-.toggle:hover {
+.check-btn:hover {
   opacity: 0.75;
 }
 
